@@ -44,9 +44,13 @@
     </div>
     <div class="infor">
       You have 4 products added on this store: <a href="addProduct.html" class="btn-action">Add new Product</a>
+      <p id="response"></p>
     </div>
     <ul class="product-list">
-      <li>
+
+
+
+      <!-- <li>
         <div class="product-image">
           <img src="assets/images/product/tenis-runner-bolt.png" layout="responsive" width="164" height="145" alt="Tênis Runner Bolt" />
         </div>
@@ -85,7 +89,7 @@
           <div class="product-name"><span>Tênis Sneakers 43N</span></div>
           <div class="product-price"><span class="special-price">Out of stock</span> <span>R$459,99</span></div>
         </div>
-      </li>
+      </li> -->
     </ul>
   </main>
   <!-- Main Content -->
@@ -99,5 +103,44 @@
 	  <span>go@jumpers.com.br</span>
 	</div>
 </footer>
- <!-- Footer --></body>
+ <!-- Footer -->
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+ <script type="text/javascript">
+  $(document).ready(function() {
+
+  const request = $.ajax({
+    url: "php_actions/list_products.php",
+    method: "GET",
+    data: { },
+    dataType: "json"
+  });
+   
+  request.done(function( msg ) {
+    console.log(msg[0]);
+    var response = msg;
+
+    $.each( response, function(key, val) {
+
+      $('.product-list').append("<li><div class='product-image'><img src='assets/images/product/tenis-sneakers-43n.png' layout='responsive' width='164' height='145' alt='"+ val.name +"' /> </div> <div class='product-info'><div class='product-name'><span>" + val.name + "</span></div> <div class='product-price'><span class='special-price'>Out of stock</span> <span>R$" + val.price + "</span></div></div></li>"
+      );
+  });
+
+  // <li>
+  //       <div class="product-image">
+  //         <img src="assets/images/product/tenis-sneakers-43n.png" layout="responsive" width="164" height="145" alt="Tênis Sneakers 43N" />
+  //       </div>
+  //       <div class="product-info">
+  //         <div class="product-name"><span>Tênis Sneakers 43N</span></div>
+  //         <div class="product-price"><span class="special-price">Out of stock</span> <span>R$459,99</span></div>
+  //       </div>
+  //     </li>
+
+
+  });
+
+});
+ </script>
+
+</body>
 </html>
