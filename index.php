@@ -21,8 +21,8 @@
   <a href="dashboard.html"><img src="assets/images/menu-go-jumpers.png" alt="Welcome" width="200" height="43" /></a>
   <div>
     <ul>
-      <li><a href="categories.html" class="link-menu">Categorias</a></li>
-      <li><a href="index.html" class="link-menu">Produtos</a></li>
+      <li><a href="categories.php" class="link-menu">Categorias</a></li>
+      <li><a href="index.php" class="link-menu">Produtos</a></li>
     </ul>
   </div>
 </amp-sidebar>
@@ -42,7 +42,7 @@
       <h1 class="title">Dashboard</h1>
     </div>
     <div class="infor">
-      You have 4 products added on this store: <a href="addProduct.html" class="btn-action">Add new Product</a>
+      You have <strong class="allQtd"></strong> products added on this store: <a href="addProduct.php" class="btn-action">Add new Product</a>
       <p id="response"></p>
     </div>
     <ul class="product-list">
@@ -94,21 +94,24 @@
   <!-- Main Content -->
 
   <!-- Footer -->
-<footer>
-	<div class="footer-image">
-	  <img src="assets/images/go-jumpers.png" width="119" height="26" alt="Go Jumpers" />
-	</div>
-	<div class="email-content">
-	  <span>go@jumpers.com.br</span>
-	</div>
-</footer>
+
+  <div id="page-content"></div>
+
+
  <!-- Footer -->
 
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+ <script src="assets/app.js"></script>
  <script type="text/javascript">
-  $(document).ready(function() {
+    $(document).ready(function(){    
+      showProducts();
 
-  const request = $.ajax({
+      $('.read-products-button').click(function(){
+          showProducts();
+      });
+    });    
+
+  /*const request = $.ajax({
     url: "php_actions/list_products.php",
     method: "GET",
     data: { },
@@ -123,23 +126,9 @@
 
       $('.product-list').append("<li><div class='product-image'><img src='assets/images/product/tenis-sneakers-43n.png' layout='responsive' width='164' height='145' alt='"+ val.name +"' /> </div> <div class='product-info'><div class='product-name'><span>" + val.name + "</span></div> <div class='product-price'><span class='special-price'>Out of stock</span> <span>R$" + val.price + "</span></div></div></li>"
       );
-  });
+  });*/
 
-  // <li>
-  //       <div class="product-image">
-  //         <img src="assets/images/product/tenis-sneakers-43n.png" layout="responsive" width="164" height="145" alt="Tênis Sneakers 43N" />
-  //       </div>
-  //       <div class="product-info">
-  //         <div class="product-name"><span>Tênis Sneakers 43N</span></div>
-  //         <div class="product-price"><span class="special-price">Out of stock</span> <span>R$459,99</span></div>
-  //       </div>
-  //     </li>
-
-
-  });
-
-});
- </script>
+</script>
 
 </body>
 </html>

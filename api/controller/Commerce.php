@@ -1,77 +1,211 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-class Commerce {
-    private $_params;
-     
-    public function __construct($params)
-    {
-        $this->_params = $params;
+include_once 'data/configs.php';
+include_once 'models/products.php';
+include_once 'models/categories.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+$method = $_GET['do'];
+
+    switch($method) {
+        case "listAll" : 
+            $product = new Products($db);
+            $run = $product->listAll();
+            $num = $run->rowCount();
+
+            if($num>0):
+                $results=array();
+
+                while ($row = $run->fetch(PDO::FETCH_ASSOC)){
+                    extract($row);
+
+                    $list=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "sku" => $sku,
+                        "description" => html_entity_decode($description),
+                        "price" => $price,
+                        "qtd" => $qtd,
+                        "categories" => $categories
+                    );
+
+                    array_push($results, $list);
+                }
+
+                http_response_code(200);
+                echo json_encode($results);
+            endif;
+        break;
+        case "showProduct" : 
+            $product = new Products($db);
+            $id = $_GET['id'];
+            $run = $product->showCategory($id);
+
+            $results=array();
+
+                while ($row = $run->fetch(PDO::FETCH_ASSOC)):
+                    extract($row);
+
+                    $list=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "sku" => $sku,
+                        "price" => $price,
+                        "qtd" => $qtd
+                        "categories" => $categories
+                    );
+
+                    array_push($results, $list);
+                endwhile;
+
+                http_response_code(200);
+                echo json_encode($results);
+            
+        break;
+
+        case "editProduct" : 
+            $data =  json_decode( file_get_contents("php://input") );
+
+            if( !empty($data->id) && !empty($data->name) && !empty($data->code) ) :
+                $product = new Products($db);
+                $product->id = $data->id;
+                $product->name = $data->name;
+                $product->code = $data->code;
+
+                if($product->editProduct( $product ) ):
+                    http_response_code(200);
+                    echo json_encode(array("message" => "Product was updated."));
+                else :
+                        http_response_code(503);
+                        echo json_encode(array("error" => "Unable to edit- Internal Error."));
+                endif;
+                
+                else :
+                http_response_code(400);
+            endif;            
+        break;
+
+        case "deleteProduct" :
+            $category = new Category($db);
+            $id = $_GET['id'];
+
+            if($category->deleteCategory( $id ) ):
+                http_response_code(200);
+            endif;            
+        break;
+
+        // categories
+        case "listCategories" :
+            $category = new Category($db);
+            $run = $category->listCategories();
+            $num = $run->rowCount();
+
+            if($num>0):
+                $results=array();
+
+                while ($row = $run->fetch(PDO::FETCH_ASSOC)):
+                    extract($row);
+
+                    $list=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "code" => $code
+                    );
+
+                    array_push($results, $list);
+                endwhile;
+
+                http_response_code(200);
+                echo json_encode($results);
+            endif;
+        break;
+
+        case "showCategory": 
+            $category = new Category($db);
+            $id = $_GET['id'];
+            $run = $category->showCategory($id);
+
+            $results=array();
+
+                while ($row = $run->fetch(PDO::FETCH_ASSOC)):
+                    extract($row);
+
+                    $list=array(
+                        "id" => $id,
+                        "name" => $name,
+                        "code" => $code
+                    );
+
+                    array_push($results, $list);
+                endwhile;
+
+                http_response_code(200);
+                echo json_encode($results);
+        break;
+
+        case "addCategory" :
+            $data =  json_decode( file_get_contents("php://input") );
+
+            if( !empty($data->name) && !empty($data->code) ) :
+                
+                $category = new Category($db);
+                $category->name = $data->name;
+                $category->code = $data->code;
+
+                if($category->addCategory($category)):
+                    http_response_code(201);
+                    echo json_encode(array("message" => "Product was created."));
+                else :
+                        http_response_code(503);
+                        echo json_encode(array("error" => "Unable to create- Internal Error."));
+                endif;
+                
+                else :
+                http_response_code(400);
+            endif;
+        break;
+
+        case "editCategory": 
+            $data =  json_decode( file_get_contents("php://input") );
+
+            if( !empty($data->id) && !empty($data->name) && !empty($data->code) ) :
+                $category = new Category($db);
+                $category->id = $data->id;
+                $category->name = $data->name;
+                $category->code = $data->code;
+
+                if($category->editCategory( $category ) ):
+                    http_response_code(200);
+                    echo json_encode(array("message" => "Product was updated."));
+                /*else :
+                        http_response_code(503);
+                        echo json_encode(array("error" => "Unable to edit- Internal Error."));*/
+                endif;
+                
+                else :
+                http_response_code(400);
+            endif;
+        break;
+
+        case "deleteCategory" :
+            $category = new Category($db);
+            $id = $_GET['id'];
+
+            if($category->deleteCategory( $id ) ):
+                http_response_code(200);
+            endif;
+        break;
+
+        default : 
+            http_response_code(404);
+            throw new Exception('Method is invalid.');
+            exit();
+        break;
     }
-    
-    public function listCategories() {
-        $sql = "SELECT * FROM categories"; 
-    }
-    
-    public function listProducts() {
-        $sql = "SELECT * FROM products";
-    }
-
-    public function showCategory() {
-        $sql = "SELECT * FROM categories WHERE id = $id";
-    }
-
-    public function showProduct() {
-        $sql = "SELECT f.id, f.name, f.sku, f.price, f.description, f.qtd, c.name AS Category
-        FROM products f
-        INNER JOIN categories c
-        ON c.id = 2
-        WHERE c.id IN (2,3)";
-
-        //ON c.id = f.categories
-        // WHERE c.id IN (2,3)";
-    }
-    
-    public function addCategory() {
-        $sql = "INSERT INTO categories (name, code) VALUES ('".$name."','".$code."')"; 
-
-    $cat = new CategoryItem();
-    $cat->name = $this->_params['name'];
-    $cat->code = $this->_params['code'];
-
-    return $cat->add();
-
-    }
-
-    public function addProduct() {
-        $sql = "INSERT INTO products (name, sku, price, description, qtd, categories)
-        VALUES ('".$name."','".$sku."','".$price."','".$desc."','".$qtd."', 1)"; 
-
-        if (mysqli_query($connect, $sql)) {
-            $id = $connect->insert_id;
-            echo "Novo produto <strong>$name</strong> cadastrado com sucesso. ID do produto $id";
-        } else {
-            echo "Error: " . $sql . "<br>" . $connect->error;
-        }
-
-    }
-
-    public function editCategory() {
-        $sql = "UPDATE products SET name = '$name', sku = '$sku', price = '$price', description = '$desc', qtd = '$qtd', categories = '$cats' WHERE id = $id";
-    }
-
-    public function editProduct() {
-        $sql = "UPDATE categories SET name = '$name', code = '$code' WHERE id = $id";
-    }
-
-    
-    
-    public function deleteCategory() {
-        $sql = "DELETE FROM categories WHERE id = $id";
-    }
-    
-    public function deleteProduct() {
-        $sql = "DELETE FROM products WHERE id = $id";
-    }
-}
-
 ?>

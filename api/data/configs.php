@@ -1,17 +1,24 @@
 <?php
+  class Database {
 
-    $localhost = "127.0.0.1"; 
-    $username = "root"; 
-    $password = ""; 
-    $dbname = "webjump";
-    $try = "mysql:host=$localhost;dbname=$dbname;";
+    private $host = "localhost";
+    private $db_name = "webjump";
+    private $username = "root";
+    private $password = "";
+    public $conn;
 
-try { 
-            $conn = new PDO($try, $username, $password);
-            echo "Connected successfully";
-            return $conn;
-          } catch (PDOException $error) {
-            echo 'Connection error: ' . $error->getMessage();
-          }
-        
+      public function getConnection(){
+    
+        $this->conn = null;
+
+        try{
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
+            $this->conn->exec("set names utf8");
+        }catch(PDOException $exception){
+            echo "Connection error: " . $exception->getMessage();
+        }
+
+        return $this->conn;
+    }
+  }
 ?>
