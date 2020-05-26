@@ -24,7 +24,7 @@ class Category
         $sql = "SELECT * FROM ". $this->cat_table ." WHERE id = $id LIMIT 0,1"; //WHERE id = $id
 
         $run = $this->conn->prepare($sql);
-        $run->execute();    
+        $run->execute();
         return $run;
     }
 
@@ -32,7 +32,10 @@ class Category
         $sql = "INSERT INTO ". $this->cat_table ." (name, code) VALUES ('".$params->name."','".$params->code."')"; 
 
         $run = $this->conn->prepare($sql);
-        $run->execute();    
+        $run->execute();
+
+        error_log($myMessage, 3, 'my/file/path/log.txt');
+        
         return $run;
     }
 
