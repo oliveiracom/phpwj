@@ -44,8 +44,6 @@ class Category
             code = ".$params->code."
         WHERE
             id = $params->id ";
-
-            echo $sql;
         
         $run = $this->conn->prepare($sql);
         $run->execute();    

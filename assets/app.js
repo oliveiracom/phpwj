@@ -96,8 +96,8 @@ function showCategories() {
             
                 <td class="data-grid-td">
                 <div class="actions">
-                    <div class="action edit" title=`+ val.id +`><a href="editCategory?id=`+ val.id +`"><button>Edit</button></a></div>
-                    <div class="action delete"><span>Delete</span></div>
+                    <a href="editCategory?id=`+ val.id +`"><button class="btn-info">Edit</button></a>
+                    <button class="btn-danger" title="`+ val.id +`">Delete</button>
                 </div>
                 </td>
             </tr>
@@ -120,12 +120,12 @@ function selectCategories() {
 
 }
 
-function showCategory(id) {
+function showCategory(id) {    
     $.getJSON( enviroment + "?do=showCategory&id=" + id, function (data) {
-        content = ``;
-
-        $('#category-name').val(data.name);
-        $('#category-code').val(data.code);
+        $.each(data, function (key, val) {
+            $('#category-name').val(val.name);
+            $('#category-code').val(val.code);
+        });
     });
 }
 

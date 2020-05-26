@@ -177,6 +177,11 @@ body {
       margin-bottom: 50px;
     }
 
+    .btn-info, .btn-danger {
+      border-radius:4px;
+      display: inline-block;
+
+    }
     .btn-action {
       background-color: #eb5202;
       border-color: #eb5202;
@@ -185,6 +190,28 @@ body {
       padding: 15px 20px;
       font-size: 20px;
       text-decoration: none;
+    }
+
+    .btn-info {
+      background-color: #6FB1AA;
+      border:none;
+      padding:4px 8px;
+      color: #fff;
+      font-size:14px;
+      transition: filter 0.2s ease-in-out;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border:none;
+      padding:4px 8px;
+      color: #fff;
+      font-size:14px;
+      transition: filter 0.2s ease-in-out;
+    }
+
+    .btn-info:hover,.btn-danger:hover {
+      filter: brightness(0.9);
     }
 
     .data-grid {

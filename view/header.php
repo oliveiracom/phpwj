@@ -32,6 +32,6 @@
     <a href="dashboard" class="link-logo"><img src="assets/images/go-logo.png" alt="Welcome" width="69" height="430" /></a>
   </div>
   <div class="right-box">
-    <span class="go-title">Administration Panel</span>
+    <span class="go-title btn-info">Administration Panel</span>
   </div>    
 </header>  
