@@ -48,7 +48,8 @@
   </main>
   <!-- Main Content -->
 
-  <?php include_once 'view/footer.php' ?>
+<?php include_once 'view/footer.php' ?>
+
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
  <script src="assets/app.js"></script>
  <script>

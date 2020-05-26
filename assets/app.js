@@ -17,7 +17,7 @@ function showProducts() {
 
                 content +=
                     `<li>
-                        <div class='product-image'><img src='assets/images/product/` + val.id + `.png' layout='responsive' width='164' height='145' alt='`+ val.name +`' /></div>
+                        <div class='product-image'><img src='assets/images/product/` + randomPictures() + `.png' layout='responsive' width='164' height='145' alt='`+ val.name +`' /></div>
                         <div class='product-info'><div class='product-name'><span>` + val.name + `</span></div> <div class='product-price'>` + stock + `<span>
                         R$` + val.price + `</span></div></div>
                     </li>`;
@@ -96,8 +96,8 @@ function showCategories() {
             
                 <td class="data-grid-td">
                 <div class="actions">
-                    <div class="action edit" title=`+ val.id +`><a href="editCategory?id=`+ val.id +`"><button>Edit</button></a></div>
-                    <div class="action delete"><span>Delete</span></div>
+                    <a href="editCategory?id=`+ val.id +`"><button class="btn-info">Edit</button></a>
+                    <button class="btn-danger" title="`+ val.id +`">Delete</button>
                 </div>
                 </td>
             </tr>
@@ -120,18 +120,34 @@ function selectCategories() {
 
 }
 
-function showCategory(id) {
+function showCategory(id) {    
     $.getJSON( enviroment + "?do=showCategory&id=" + id, function (data) {
-        content = ``;
-
-        $('#category-name').val(data.name);
-        $('#category-code').val(data.code);
+        $.each(data, function (key, val) {
+            $('#category-name').val(val.name);
+            $('#category-code').val(val.code);
+        });
     });
 }
 
 function addCategory(data) {
     $.ajax({
         url: enviroment + "?do=addCategory",
+        type : "POST",
+        contentType : 'application/json',
+        data : data,
+        success : function(result) {
+        },
+        error: function(xhr, resp, text) {
+            console.log(xhr, resp, text);
+        }
+    });
+    
+    return false;
+}
+
+function editCategory(data, id) {
+    $.ajax({
+        url: enviroment + "?do=editCategory&id=" + id,
         type : "POST",
         contentType : 'application/json',
         data : data,
@@ -145,4 +161,11 @@ function addCategory(data) {
     });
     
     return false;
+
+}
+
+function randomPictures() {
+    const picsArray = [1,2,3,4];
+    const randomPic = picsArray[Math.floor(Math.random() * picsArray.length)];
+    return randomPic;
 }

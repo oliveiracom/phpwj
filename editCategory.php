@@ -3,6 +3,7 @@
 <!-- Header -->
   <!-- Main Content -->
   <main class="content">
+    <div id="loading">LOAD</div>
     <h1 class="title new-item">Edit Category</h1>
     
     <form method='post'>
@@ -34,24 +35,23 @@
 
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
  <script src="assets/app.js"></script>
+
  <script>
    $(document).ready(function() {
-    const id =  <?php echo $_GET['id'];?>
-
+    const id =  <?php echo $_GET['id'];?>;
+    
     showCategory(id);
-
-    $('#category-name').val('testinho');
+console.log('aqui');
+    $('#loading').hide();
 
 
     $('form').submit(function() {
-      //validateForm();
-
       const data = {
         name: $('#category-name').val(),
         code: $('#category-code').val()
       };
 
-      addCategory( JSON.stringify(data) );
+      editCategory( JSON.stringify(data), id );
 
       return false;      
     });

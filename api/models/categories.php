@@ -43,10 +43,10 @@ class Category
 
         $sql = "UPDATE ". $this->cat_table ."
         SET 
-            'name' = 'Cadimia',
-            'code' = 10
+            name = '".$params->name."',
+            code = ".$params->code."
         WHERE
-            'id' = 9 ";
+            id = $params->id ";
         
         $run = $this->conn->prepare($sql);
         $run->execute();    

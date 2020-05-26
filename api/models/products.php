@@ -2,7 +2,8 @@
 class Products
 {
     private $conn;
-    private $table_name = "products";
+    private $prod_table = "products";
+    private $cat_table = "categories";
 
     public $id;
     public $name;
@@ -24,25 +25,32 @@ class Products
         return $run;
     }
 
-    public function showProduct() {
-        $sql = "SELECT f.id, f.name, f.sku, f.price, f.description, f.qtd, c.name AS Category
-        FROM ". $this->prod_table ." f
-        INNER JOIN categories c
-        ON c.id = 2
-        WHERE c.id IN ( f.categories )";
+    public function showProduct($id) {
+        
+        $sql = "SELECT * FROM ". $this->prod_table ." WHERE id = $id ";
+
+        // c.name AS Category---- INNER JOIN categories c
+        // ON c.id = 2
+        // WHERE c.id IN ( f.categories )";
 
         //ON c.id = f.categories
         // WHERE c.id IN (2,3)";
 
         $run = $this->conn->prepare($sql);
-        $run->execute();    
+        $run->execute();
         return $run;
     }
 
-    public function addProduct() {
-
-        $sql = "INSERT INTO ". $this->prod_table ." (name, sku, price, description, qtd, categories)
-        VALUES ('".$name."','".$sku."','".$price."','".$desc."','".$qtd."', 1)";
+    public function addProduct($params) {
+         $sql = "INSERT INTO ". $this->prod_table ." (name, sku, price, description, qtd, categories)
+        VALUES 
+        ('".$params->name."',
+            '".$params->sku."',
+            '".$params->price."',
+            '".$params->description."',
+            '".$params->qtd."',
+            '".$params->categories."'
+        )";
 
         $run = $this->conn->prepare($sql);
         $run->execute();    
@@ -50,15 +58,22 @@ class Products
 
     }
 
-    public function editProduct() {
-        $sql = "UPDATE ". $this->prod_table ." SET name = '$name', code = '$code' WHERE id = $id";
+    public function editProduct($params) {
+        $sql = "UPDATE ". $this->prod_table ." SET 
+        name = '".$params->name."',
+        sku = '".$params->sku."',
+        description = '".$params->description."',
+        price = ".$params->price.",
+        qtd = ".$params->qtd.",
+        categories = '".$params->categories."'
+        WHERE id = ".$params->id;
 
         $run = $this->conn->prepare($sql);
         $run->execute();    
         return $run;
     }
 
-    public function deleteProduct() {
+    public function deleteProduct($id) {
         $sql = "DELETE FROM ". $this->prod_table ." WHERE id = $id";
 
         $run = $this->conn->prepare($sql);
