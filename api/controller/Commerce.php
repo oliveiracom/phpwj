@@ -45,7 +45,7 @@ $method = $_GET['do'];
         case "showProduct" : 
             $product = new Products($db);
             $id = $_GET['id'];
-            $run = $product->showCategory($id);
+            $run = $product->showProduct($id);
 
             $results=array();
 
@@ -57,7 +57,7 @@ $method = $_GET['do'];
                         "name" => $name,
                         "sku" => $sku,
                         "price" => $price,
-                        "qtd" => $qtd
+                        "qtd" => $qtd,
                         "categories" => $categories
                     );
 
@@ -66,17 +66,44 @@ $method = $_GET['do'];
 
                 http_response_code(200);
                 echo json_encode($results);
-            
         break;
+        case "addProduct":
+            $data =  json_decode( file_get_contents("php://input") );
 
+            if( !empty($data) ) :
+                $product = new Products($db);
+                $product->name = $data->name;
+                $product->sku = $data->sku;
+                $product->description = $data->description;
+                $product->price = $data->price;
+                $product->qtd = $data->qtd;
+                $product->categories = $data->categories;
+
+                if($product->addProduct( $product ) ):
+                    http_response_code(201);
+                    echo json_encode(array("message" => "Product was created."));
+                else :
+                        http_response_code(503);
+                        echo json_encode(array("error" => "Unable to create - Internal Error."));
+                endif;
+                
+                else :
+                http_response_code(400);
+            endif;
+        break;
         case "editProduct" : 
             $data =  json_decode( file_get_contents("php://input") );
 
-            if( !empty($data->id) && !empty($data->name) && !empty($data->code) ) :
+            if( !empty($data) ) :
+                $id = $_GET['id'];
                 $product = new Products($db);
-                $product->id = $data->id;
+                $product->id = $id;
                 $product->name = $data->name;
-                $product->code = $data->code;
+                $product->sku = $data->sku;
+                $product->description = $data->description;
+                $product->price = $data->price;
+                $product->qtd = $data->qtd;
+                $product->categories = $data->categories;
 
                 if($product->editProduct( $product ) ):
                     http_response_code(200);
@@ -92,10 +119,10 @@ $method = $_GET['do'];
         break;
 
         case "deleteProduct" :
-            $category = new Category($db);
+            $category = new Products($db);
             $id = $_GET['id'];
 
-            if($category->deleteCategory( $id ) ):
+            if($category->deleteProduct( $id ) ):
                 http_response_code(200);
             endif;            
         break;
@@ -174,19 +201,20 @@ $method = $_GET['do'];
         case "editCategory": 
             $data =  json_decode( file_get_contents("php://input") );
 
-            if( !empty($data->id) && !empty($data->name) && !empty($data->code) ) :
+            if( !empty($data) ) :
+                $id = $_GET['id'];
                 $category = new Category($db);
-                $category->id = $data->id;
+                $category->id = $id;
                 $category->name = $data->name;
                 $category->code = $data->code;
 
-                if($category->editCategory( $category ) ):
-                    http_response_code(200);
-                    echo json_encode(array("message" => "Product was updated."));
-                /*else :
-                        http_response_code(503);
-                        echo json_encode(array("error" => "Unable to edit- Internal Error."));*/
-                endif;
+                    if($category->editCategory( $category ) ):
+                        http_response_code(200);
+                        echo json_encode(array("message" => "Product was updated."));
+                    else :
+                            http_response_code(503);
+                            echo json_encode(array("error" => "Unable to edit- Internal Error."));
+                    endif;
                 
                 else :
                 http_response_code(400);

@@ -50,10 +50,19 @@
  <script src="assets/app.js"></script>
  <script>
    $(document).ready(function() {
-
     selectCategories();
 
+    $('form').submit(function() {
+      const data = {
+        name: $('#category-name').val(),
+        code: $('#category-code').val()
+      };
+
+      addProduct( JSON.stringify(data) );
+
+      return false; 
    });
+
  </script>
 </body>
 </html>

@@ -136,6 +136,22 @@ function addCategory(data) {
         contentType : 'application/json',
         data : data,
         success : function(result) {
+        },
+        error: function(xhr, resp, text) {
+            console.log(xhr, resp, text);
+        }
+    });
+    
+    return false;
+}
+
+function editCategory(data, id) {
+    $.ajax({
+        url: enviroment + "?do=editCategory&id=" + id,
+        type : "POST",
+        contentType : 'application/json',
+        data : data,
+        success : function(result) {
             // tudo ok
             console.log( 'rodou ajax ');
         },
@@ -145,4 +161,5 @@ function addCategory(data) {
     });
     
     return false;
+
 }
