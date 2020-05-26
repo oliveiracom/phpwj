@@ -17,7 +17,7 @@ function showProducts() {
 
                 content +=
                     `<li>
-                        <div class='product-image'><img src='assets/images/product/` + val.id + `.png' layout='responsive' width='164' height='145' alt='`+ val.name +`' /></div>
+                        <div class='product-image'><img src='assets/images/product/` + randomPictures() + `.png' layout='responsive' width='164' height='145' alt='`+ val.name +`' /></div>
                         <div class='product-info'><div class='product-name'><span>` + val.name + `</span></div> <div class='product-price'>` + stock + `<span>
                         R$` + val.price + `</span></div></div>
                     </li>`;
@@ -162,4 +162,10 @@ function editCategory(data, id) {
     
     return false;
 
+}
+
+function randomPictures() {
+    const picsArray = [1,2,3,4];
+    const randomPic = picsArray[Math.floor(Math.random() * picsArray.length)];
+    return randomPic;
 }
